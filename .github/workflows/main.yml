@@ -37,3 +37,11 @@ jobs:
     - name: Build project for ${{matrix.configuration }}|${{ matrix.architecture }}
       run: |
           msbuild /p:Configuration=${{matrix.configuration }} /p:Platform=${{ matrix.architecture }}
+          
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        # Artifact name
+        name: Build for ${{ matrix.configuration }}|${{ matrix.architecture }}
+        # A file, directory or wildcard pattern that describes what to upload
+        path: bin\${{ matrix.architecture }}\${{ matrix.configuration }}\

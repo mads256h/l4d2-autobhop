@@ -37,4 +37,4 @@ jobs:
     - name: Build project for ${{ matrix.architecture }}
       run: |
           dir
-          msbuild
+          dir "C:\Program Files (x86)\MSBuild\Microsoft.Cpp"

@@ -1,0 +1,47 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        architecture:
+          - x64
+          - x86
+        configuration:
+          - Release
+          - Debug
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - name: setup-msbuild
+      uses: microsoft/setup-msbuild@v1
+        
+    - name: Build project for ${{matrix.configuration }}|${{ matrix.architecture }}
+      run: |
+          msbuild /p:Configuration=${{matrix.configuration }} /p:Platform=${{ matrix.architecture }}
+          
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        # Artifact name
+        name: Build for ${{ matrix.configuration }} ${{ matrix.architecture }}
+        # A file, directory or wildcard pattern that describes what to upload
+        path: bin\${{ matrix.architecture }}\${{ matrix.configuration }}\

@@ -20,8 +20,11 @@ jobs:
       fail-fast: false
       matrix:
         architecture:
-          - amd64
+          - 64x
           - 86x
+        configuration:
+          - Release
+          - Debug
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -31,8 +34,6 @@ jobs:
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
         
-    - name: Build project for ${{ matrix.architecture }}
+    - name: Build project for ${{matrix.configuration }}|${{ matrix.architecture }}
       run: |
-          dir
-          dir ${VCTargetsPath}
-          msbuild
+          msbuild /property:Configuration=${{matrix.configuration }} /property:Platform=${{ matrix.architecture }}

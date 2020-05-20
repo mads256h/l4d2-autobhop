@@ -21,7 +21,7 @@ jobs:
       matrix:
         architecture:
           - x64
-          - Win32
+          - x86
         configuration:
           - Release
           - Debug

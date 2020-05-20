@@ -36,4 +36,4 @@ jobs:
         
     - name: Build project for ${{matrix.configuration }}|${{ matrix.architecture }}
       run: |
-          msbuild /p:Configuration=${{matrix.configuration }} /p:Platform=${{ matrix.configuration }}
+          msbuild /p:Configuration=${{matrix.configuration }} /p:Platform=${{ matrix.architecture }}

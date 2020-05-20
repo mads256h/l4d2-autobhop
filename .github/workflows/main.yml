@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         architecture:
-          - 64x
+          - x64
           - Win32
         configuration:
           - Release

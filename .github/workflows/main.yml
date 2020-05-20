@@ -33,3 +33,8 @@ jobs:
       with:
         # Target build architecture
         arch: ${{ matrix.architecture }}
+        
+    - name: Build project for ${{ matrix.architecture }}
+      run: |
+          dir
+          msbuild

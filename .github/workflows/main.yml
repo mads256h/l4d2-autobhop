@@ -32,4 +32,4 @@ jobs:
       uses: seanmiddleditch/gha-setup-vsdevenv@v1
       with:
         # Target build architecture
-        arch: ${{ matrix.architecture }}# optional, default is amd64
+        arch: ${{ matrix.architecture }}

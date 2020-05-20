@@ -42,6 +42,6 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         # Artifact name
-        name: Build for ${{ matrix.configuration }}|${{ matrix.architecture }}
+        name: Build for ${{ matrix.configuration }} ${{ matrix.architecture }}
         # A file, directory or wildcard pattern that describes what to upload
         path: bin\${{ matrix.architecture }}\${{ matrix.configuration }}\

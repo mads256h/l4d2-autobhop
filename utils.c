@@ -1,31 +1,30 @@
 #include "utils.h"
 
-
 #include <stdio.h>
+#include <stdlib.h>
 #include <tchar.h>
 
-#include <Windows.h>
 #include <TlHelp32.h>
+#include <Windows.h>
 
-DWORD GetClientDllBaseAddress(HANDLE hSnapshot)
-{
-	MODULEENTRY32 module_entry32;
-	module_entry32.dwSize = sizeof(module_entry32);
+void error(const char *text) {
+  fputs(text, stderr);
+  exit(EXIT_FAILURE);
+}
 
-	BOOL was_copied = Module32First(hSnapshot, &module_entry32);
+DWORD get_client_dll_base_address(HANDLE hSnapshot) {
+  MODULEENTRY32 module_entry32;
+  module_entry32.dwSize = sizeof(module_entry32);
 
-	while (was_copied)
-	{
-		if (_tcscmp(TEXT("client.dll"), module_entry32.szModule) == 0)
-		{
-			return (DWORD)module_entry32.modBaseAddr;
-		}
+  BOOL was_copied = Module32First(hSnapshot, &module_entry32);
 
-		_tprintf(module_entry32.szModule);
-		printf("\r\n");
-		
-		was_copied = Module32Next(hSnapshot, &module_entry32);
-	}
+  while (was_copied) {
+    if (_tcscmp(TEXT("client.dll"), module_entry32.szModule) == 0) {
+      return (DWORD)module_entry32.modBaseAddr;
+    }
 
-	return 0;
+    was_copied = Module32Next(hSnapshot, &module_entry32);
+  }
+
+  return 0;
 }

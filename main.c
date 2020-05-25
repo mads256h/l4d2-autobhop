@@ -1,4 +1,3 @@
-#include "updatethread.h"
 #include "utils.h"
 
 #include <stdio.h>
@@ -67,42 +66,22 @@ int main(const int argc, char *argv[]) {
     error("Could not get client.dll base address!");
   }
 
-  struct update_pointer_info update_pointer_info;
-  update_pointer_info.l4d2_process = l4d2_process;
-  update_pointer_info.player_base = client_base_address + player_base_offset;
-  update_pointer_info.player_base_pointer = 0;
-
-  // Create and start the update pointer thread.
-  HANDLE update_pointer_thread_handle = CreateThread(
-      NULL, 0, update_pointer_thread, &update_pointer_info, 0, NULL);
-
-  // Set the update pointer thread to lowest priority.
-  if (SetThreadPriority(update_pointer_thread_handle, THREAD_PRIORITY_LOWEST) ==
-      FALSE) {
-    fprintf(
-        stderr,
-        "Could not set thread priority. Error: 0x%lX\r\nContinuing anyway!\r\n",
-        GetLastError());
-  }
-
-  // Wait for the update pointer thread to update the player base pointer.
-  while (!update_pointer_info.player_base_pointer) {
-    puts("Waiting for base pointer to be updated!");
-    Sleep(1000);
-  }
-
   puts("Autobhop is now functional!");
 
   // Bhop loop
+  DWORD player_base_pointer = 0;
   DWORD m_flags = 0;
   while (TRUE) {
     // Check if the space key is held down.
     if (GetAsyncKeyState(' ') & 0x8000) {
+      // Read player base pointer
+      ReadProcessMemory(
+          l4d2_process, (char *)client_base_address + player_base_offset,
+          &player_base_pointer, sizeof(player_base_pointer), NULL);
       // Read the mFlags variable from l4d2
       ReadProcessMemory(l4d2_process,
-                        (char *)update_pointer_info.player_base_pointer +
-                            m_flags_offset,
-                        &m_flags, sizeof(m_flags), NULL);
+                        (char *)player_base_pointer + m_flags_offset, &m_flags,
+                        sizeof(m_flags), NULL);
 
       // I have no idea what these values mean i just copied them from another
       // autobhop program.
